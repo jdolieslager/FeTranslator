@@ -1,9 +1,10 @@
 {
-    "name": "jdolieslager/fetranslate",
+    "name": "jdolieslager/fetranslator",
     "description": "ZF2 Module for translating routematches and messages",
     "license": "BSD-2-Clause",  
     "keywords" : [
         "fe",
+        "translator",
         "translate",
         "zf2",
         "zend framework 2"
