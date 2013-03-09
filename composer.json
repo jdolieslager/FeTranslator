@@ -1,0 +1,23 @@
+{
+    "name": "jdolieslager/fetranslate",
+    "description": "ZF2 Module for translating routematches and messages",
+    "license": "BSD-2-Clause",  
+    "keywords" : [
+        "fe",
+        "translate",
+        "zf2",
+        "zend framework 2"
+    ]
+    "authors": [
+        {
+            "name": "Jesper Dolieslager",
+            "email": "jesper@flyingeagle.nl"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php"                         : ">= 5.3.3"
+        "zendframework/zendframework" : "2.*"
+    }
+}
+
