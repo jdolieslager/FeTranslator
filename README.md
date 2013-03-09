@@ -81,7 +81,7 @@ class Controller extends AbstractActionController
     
     public function indexAction()
     {
-        $translator = $this->getFeTranslator();
+        $translator = $this->getFeTranslateService();
         
         // Translate a message defined in nl_NL.php as array('level1' => array('level2' => 'value'));
         // The translations are loaded in the application namespace
