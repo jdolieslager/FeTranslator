@@ -107,15 +107,24 @@ class Translator extends \Zend\I18n\Translator\Translator
      * @param Uri|null $uri                 Use other URI (Console environments)
      * @param array    $params              The params for the route
      * @param array    $options             The options for the router::assemble
+     * @param boolean  $forceHttpRouter     Force to use the http router
      */
     public function translateUrl(
         $matchedRouteName = null,
         Uri $uri          = null,
         array $params     = array(),
-        array $options    = array()
+        array $options    = array(),
+        $forceHttpRouter  = false
     ) {
         $routeMatch = $this->getMvcEvent()->getRouteMatch();
         $router     = $this->getMvcEvent()->getRouter();
+
+        if ($forceHttpRouter) {
+            $router = $this->getMvcEvent()
+                ->getApplication()
+                ->getServiceManager()
+                ->get('httprouter');
+        }
 
         if ($matchedRouteName === null) {
             $matchedRouteName = $routeMatch->getMatchedRouteName();
@@ -154,6 +163,7 @@ class Translator extends \Zend\I18n\Translator\Translator
 
         return $router->assemble($params, $options);
     }
+
 
     /**
      * @param MvcEvent $mvcEvent
