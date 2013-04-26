@@ -61,6 +61,10 @@ class Translator extends \Zend\I18n\Translator\Translator
 
         $parts  = explode('.', $message);
         $lookup = $this->messages[$namespace][$locale];
+        
+        if (is_array($lookup) === false && !($lookup instanceOf \ArrayAccess)) {
+            return $lookup;
+        }
 
         foreach ($parts as $part) {
             if (array_key_exists($part, $lookup) === false) {
