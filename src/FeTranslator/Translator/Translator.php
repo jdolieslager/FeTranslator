@@ -133,7 +133,7 @@ class Translator extends \Zend\I18n\Translator\Translator
         if ($matchedRouteName === null) {
             $matchedRouteName = $routeMatch->getMatchedRouteName();
 
-            if ($name === null) {
+            if ($matchedRouteName === null) {
                 throw new Exception\RuntimeException(
                     'RouteMatch does not contain a matched route name'
                 );
