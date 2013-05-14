@@ -185,7 +185,7 @@ class Translator extends \Zend\I18n\Translator\Translator
     public function setMvcEvent(MvcEvent $mvcEvent)
     {
         $this->mvcEvent = $mvcEvent;
-        $this->responseOk = $mvcEvent->getResponse()->isOk();
+        $this->responseOk = $mvcEvent->getRouteMatch() !== null;
 
         return $this;
     }
