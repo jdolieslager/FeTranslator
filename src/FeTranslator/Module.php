@@ -11,7 +11,8 @@ class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ConfigProviderInterface,
     Feature\ServiceProviderInterface,
-    Feature\ViewHelperProviderInterface
+    Feature\ViewHelperProviderInterface,
+    Feature\ControllerProviderInterface
 {
     public function onBootstrap(MvcEvent $e)
     {
@@ -60,5 +61,13 @@ class Module implements
     public function getViewHelperConfig()
     {
         return include __DIR__ . '/../../config/viewhelper.config.php';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getControllerConfig()
+    {
+        return include __DIR__ . '/../../config/controller.config.php';
     }
 }
