@@ -71,7 +71,7 @@ return array(
 
 ### Use Translations in controllers and services
 You can add a trait for faster access to the Translator service. Requirements is: `php >= 5.4` and the class
-should have a method `getLocator()`
+should have a method `getServiceLocator()`
 
 ```php
 <?php
