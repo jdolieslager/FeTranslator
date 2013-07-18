@@ -49,29 +49,15 @@ class TranslateUrl extends \Zend\View\Helper\AbstractHelper
         $name               = null,
         array $params       = array(),
         $options            = array(),
-        $reuseMatchedParams = false
+        $reuseMatchedParams = true
     ) {
-        if ($reuseMatchedParams && $this->routeMatch !== null) {
-            $routeMatchParams = $this->routeMatch->getParams();
-
-            if (isset($routeMatchParams[ModuleRouteListener::ORIGINAL_CONTROLLER])) {
-                $routeMatchParams['controller'] =
-                    $routeMatchParams[ModuleRouteListener::ORIGINAL_CONTROLLER];
-                unset($routeMatchParams[ModuleRouteListener::ORIGINAL_CONTROLLER]);
-            }
-
-            if (isset($routeMatchParams[ModuleRouteListener::MODULE_NAMESPACE])) {
-                unset($routeMatchParams[ModuleRouteListener::MODULE_NAMESPACE]);
-            }
-
-            $params = array_merge($routeMatchParams, $params);
-        }
-
         return $this->translator->translateUrl(
             $name,
             null,
             $params,
-            $options
+            $options,
+            false,
+            $reuseMatchedParams
         );
     }
 }

@@ -5,6 +5,7 @@ use FeTranslator\Exception;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Uri\Uri;
+use Zend\Mvc\ModuleRouteListener;
 
 /**
  * @category    FeTranslator
@@ -61,7 +62,7 @@ class Translator extends \Zend\I18n\Translator\Translator
 
         $parts  = explode('.', $message);
         $lookup = $this->messages[$namespace][$locale];
-        
+
         if (is_array($lookup) === false && !($lookup instanceOf \ArrayAccess)) {
             return $lookup;
         }
@@ -112,13 +113,17 @@ class Translator extends \Zend\I18n\Translator\Translator
      * @param array    $params              The params for the route
      * @param array    $options             The options for the router::assemble
      * @param boolean  $forceHttpRouter     Force to use the http router
+     * @param boolean  $reuseMatchedParams  Whether to reuse matched parameters
+     *
+     * @return string
      */
     public function translateUrl(
-        $matchedRouteName = null,
-        Uri $uri          = null,
-        array $params     = array(),
-        array $options    = array(),
-        $forceHttpRouter  = false
+        $matchedRouteName   = null,
+        Uri $uri            = null,
+        array $params       = array(),
+        array $options      = array(),
+        $forceHttpRouter    = false,
+        $reuseMatchedParams = false
     ) {
         $routeMatch = $this->getMvcEvent()->getRouteMatch();
         $router     = $this->getMvcEvent()->getRouter();
@@ -140,7 +145,23 @@ class Translator extends \Zend\I18n\Translator\Translator
             }
         }
 
+        if ($reuseMatchedParams && $routeMatch !== null) {
+            $routeMatchParams = $routeMatch->getParams();
+
+            if (isset($routeMatchParams[ModuleRouteListener::ORIGINAL_CONTROLLER])) {
+                $routeMatchParams['controller'] = $routeMatchParams[ModuleRouteListener::ORIGINAL_CONTROLLER];
+                unset($routeMatchParams[ModuleRouteListener::ORIGINAL_CONTROLLER]);
+            }
+
+            if (isset($routeMatchParams[ModuleRouteListener::MODULE_NAMESPACE])) {
+                unset($routeMatchParams[ModuleRouteListener::MODULE_NAMESPACE]);
+            }
+
+            $params = array_merge($routeMatchParams, $params);
+        }
+
         $result = $this->translate($matchedRouteName, self::NAMESPACE_ROUTE_MATCH);
+
         if ($result !== $matchedRouteName) {
             foreach ($params as $key => $value) {
                 if (array_key_exists($key, $result) === false) {
