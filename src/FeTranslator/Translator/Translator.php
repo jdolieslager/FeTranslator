@@ -18,6 +18,12 @@ class Translator extends \Zend\I18n\Translator\Translator
     const NAMESPACE_ROUTE_MATCH = 'routeMatch';
 
     /**
+     * MvcEvent has a proper HTTP 200 response?
+     * @var boolean
+     */
+    protected $responseOk;
+    
+    /**
      * Maps parameters for URL generation to the correct key
      *
      * @var array
@@ -185,6 +191,9 @@ class Translator extends \Zend\I18n\Translator\Translator
 
         $options['name'] = $matchedRouteName;
         $options['uri']  = $uri;
+        if (!$this->responseOk) {
+            return '/#error-' . $matchedRouteName;
+        }
 
         return $router->assemble($params, $options);
     }
@@ -197,6 +206,7 @@ class Translator extends \Zend\I18n\Translator\Translator
     public function setMvcEvent(MvcEvent $mvcEvent)
     {
         $this->mvcEvent = $mvcEvent;
+        $this->responseOk = $mvcEvent->getRouteMatch() !== null;
 
         return $this;
     }

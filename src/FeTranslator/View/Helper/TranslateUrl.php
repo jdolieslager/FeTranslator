@@ -30,7 +30,7 @@ class TranslateUrl extends \Zend\View\Helper\AbstractHelper
      * @param Translator $translator
      * @param RouteMatch $routeMatch
      */
-    public function __construct(Translator $translator, RouteMatch $routeMatch)
+    public function __construct(Translator $translator, RouteMatch $routeMatch = null)
     {
         $this->translator = $translator;
         $this->routeMatch = $routeMatch;
