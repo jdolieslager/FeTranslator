@@ -15,7 +15,8 @@ use Zend\Mvc\ModuleRouteListener;
  */
 class Translator extends \Zend\I18n\Translator\Translator
 {
-    const NAMESPACE_ROUTE_MATCH = 'routeMatch';
+    const NAMESPACE_ROUTE_MATCH  = 'routeMatch';
+    const EVENT_PRE_ASSEMBLE_URL = 'fe_translator.pre.assemble_url';
 
     /**
      * Maps parameters for URL generation to the correct key
@@ -186,9 +187,23 @@ class Translator extends \Zend\I18n\Translator\Translator
         $options['name'] = $matchedRouteName;
         $options['uri']  = $uri;
 
-        return $router->assemble($params, $options);
-    }
 
+        $options = new \ArrayIterator($options);
+        $params  = new \ArrayIterator($params);
+
+        // Trigger event to manipulate $options and params
+        $this->getMvcEvent()->getTarget()->getEventManager()
+            ->trigger(
+                self::EVENT_PRE_ASSEMBLE_URL,
+                $this,
+                array(
+                    'options' => $options,
+                    'params'  => $params,
+                )
+        );
+
+        return $router->assemble($params->getArrayCopy(), $options->getArrayCopy());
+    }
 
     /**
      * @param MvcEvent $mvcEvent
