@@ -15,13 +15,6 @@ use Zend\Mvc\Router\RouteMatch;
 class TranslateUrl extends \Zend\View\Helper\AbstractHelper
 {
     /**
-     * RouteInterface match returned by the router.
-     *
-     * @var RouteMatch
-     */
-    protected $routeMatch;
-
-    /**
      * @var Translator
      */
     protected $translator;
@@ -30,10 +23,9 @@ class TranslateUrl extends \Zend\View\Helper\AbstractHelper
      * @param Translator $translator
      * @param RouteMatch $routeMatch
      */
-    public function __construct(Translator $translator, RouteMatch $routeMatch)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
-        $this->routeMatch = $routeMatch;
     }
 
     /**

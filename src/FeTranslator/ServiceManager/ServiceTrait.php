@@ -16,4 +16,12 @@ trait ServiceTrait
     {
         return $this->getServiceLocator()->get('FeTranslator\Translator');
     }
+
+    /**
+     * @return \FeTranslator\EventManager\EventManager
+     */
+    public function getFeTranslateEventManagerService()
+    {
+        return $this->getServiceLocator()->get('FeTranslator\EventManager');
+    }
 }

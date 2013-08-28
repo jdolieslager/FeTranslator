@@ -29,9 +29,8 @@ class TranslatorServiceFactory implements FactoryInterface
 
         // Inject MvcEvent object
         $translator  = Translator::factory($translatorConfig);
-        $translator->setMvcEvent(
-            $locator->get('Application')->getMvcEvent()
-        );
+        $translator->setMyEventManager($locator->get('FeTranslator\EventManager'));
+        $translator->setMvcEvent($locator->get('Application')->getMvcEvent());
 
         return $translator;
     }

@@ -2,6 +2,7 @@
 namespace FeTranslator\Translator;
 
 use FeTranslator\Exception;
+use FeTranslator\EventManager\EventManager;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Uri\Uri;
@@ -16,7 +17,6 @@ use Zend\Mvc\ModuleRouteListener;
 class Translator extends \Zend\I18n\Translator\Translator
 {
     const NAMESPACE_ROUTE_MATCH  = 'routeMatch';
-    const EVENT_PRE_ASSEMBLE_URL = 'fe_translator.pre.assemble_url';
 
     /**
      * Maps parameters for URL generation to the correct key
@@ -31,6 +31,33 @@ class Translator extends \Zend\I18n\Translator\Translator
      * @var MvcEvent
      */
     protected $mvcEvent;
+
+    /**
+     * @var EventManager
+     */
+    protected $eventManager;
+
+
+    /**
+     * @param EventManager $eventManager
+     * @return Translator
+     */
+    public function setMyEventManager(EventManager $eventManager)
+    {
+        $this->eventManager = $eventManager;
+
+        return $this;
+    }
+
+    /**
+     * Get the event Manager
+     *
+     * @return EventManager
+     */
+    public function getEventManager()
+    {
+        return $this->eventManager;
+    }
 
     /**
      * Get a translated message.
@@ -181,28 +208,36 @@ class Translator extends \Zend\I18n\Translator\Translator
         }
 
         if ($uri === null) {
-            $uri = $this->getMvcEvent()->getRequest()->getUri();
+            $request = $this->getMvcEvent()->getRequest();
+            if ($request instanceof \Zend\Http\Request) {
+                $uri = $request->getUri();
+            } else {
+                $uri      = new \Zend\Uri\Http();
+                $this->getEventManager()->triggerMissingUri(array(
+                    'uri' => $uri,
+                ));
+            }
         }
 
         $options['name'] = $matchedRouteName;
         $options['uri']  = $uri;
 
-
         $options = new \ArrayIterator($options);
         $params  = new \ArrayIterator($params);
 
-        // Trigger event to manipulate $options and params
-        $this->getMvcEvent()->getTarget()->getEventManager()
-            ->trigger(
-                self::EVENT_PRE_ASSEMBLE_URL,
-                $this,
-                array(
-                    'options' => $options,
-                    'params'  => $params,
-                )
+        $this->getEventManager()->triggerPreAssemble(
+            array(
+                'options' => $options,
+                'params'  => $params,
+            )
         );
 
-        return $router->assemble($params->getArrayCopy(), $options->getArrayCopy());
+        try {
+            return $router->assemble($params->getArrayCopy(), $options->getArrayCopy());
+        } catch (\Exception $e) {
+            echo $e->getTraceAsString();
+            exit;
+        }
     }
 
     /**
