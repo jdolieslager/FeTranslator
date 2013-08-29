@@ -3,6 +3,7 @@ namespace FeTranslator\Translator;
 
 use FeTranslator\Exception;
 use FeTranslator\EventManager\EventManager;
+use FeTranslator\Translator\LoaderPluginManager;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Uri\Uri;
@@ -57,6 +58,18 @@ class Translator extends \Zend\I18n\Translator\Translator
     public function getEventManager()
     {
         return $this->eventManager;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getPluginManager()
+    {
+        if (!$this->pluginManager instanceof LoaderPluginManager) {
+            $this->setPluginManager(new LoaderPluginManager());
+        }
+
+        return $this->pluginManager;
     }
 
     /**
