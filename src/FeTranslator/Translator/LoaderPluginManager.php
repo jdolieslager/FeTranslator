@@ -4,11 +4,7 @@ namespace FeTranslator\Translator;
 use Zend\I18n\Translator\LoaderPluginManager as ZendLoaderPluginManager;
 
 /**
- * Plugin manager implementation for translation loaders.
- *
- * Enforces that loaders retrieved are either instances of
- * Loader\FileLoaderInterface or Loader\RemoteLoaderInterface. Additionally,
- * it registers a number of default loaders.
+ * {@inheritdoc}
  */
 class LoaderPluginManager extends ZendLoaderPluginManager
 {
