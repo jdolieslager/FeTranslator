@@ -12,21 +12,16 @@ namespace FeTranslator\Translator\Loader;
 use Zend\I18n\Exception;
 use Zend\I18n\Translator\Plural\Rule as PluralRule;
 use Zend\I18n\Translator\Loader\FileLoaderInterface;
+use Zend\I18n\Translator\Loader\PhpArray as ZendPhpArray;
 use FeTranslator\Translator\TextDomain;
 
 /**
  * PHP array loader.
  */
-class PhpArray implements FileLoaderInterface
+class PhpArray extends ZendPhpArray
 {
     /**
-     * load(): defined by FileLoaderInterface.
-     *
-     * @see    FileLoaderInterface::load()
-     * @param  string $locale
-     * @param  string $filename
-     * @return TextDomain|null
-     * @throws Exception\InvalidArgumentException
+     * {@inheritdoc}
      */
     public function load($locale, $filename)
     {
