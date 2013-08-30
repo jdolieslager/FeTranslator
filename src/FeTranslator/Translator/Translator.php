@@ -37,6 +37,21 @@ class Translator extends \Zend\I18n\Translator\Translator
      * @var EventManager
      */
     protected $eventManager;
+    
+    /**
+    * Constructor
+    */
+    public function __construct()
+    {
+        // Override the phparray service with our own service
+        $this->getPluginManager()->setAllowOverride(true);
+        $this->getPluginManager()->setInvokableClass(
+            'phparray', 
+            'FeTranslator\Translator\Loader\PhpArray',
+            true
+        );
+        $this->getPluginManager()->setAllowOverride(false);
+    }
 
 
     /**
@@ -60,18 +75,6 @@ class Translator extends \Zend\I18n\Translator\Translator
         return $this->eventManager;
     }
     
-    /**
-     * {@inheritdoc}
-     */
-    public function getPluginManager()
-    {
-        if (!$this->pluginManager instanceof LoaderPluginManager) {
-            $this->setPluginManager(new LoaderPluginManager());
-        }
-
-        return $this->pluginManager;
-    }
-
     /**
      * Get a translated message.
      *

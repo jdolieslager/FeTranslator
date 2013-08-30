@@ -2,6 +2,7 @@
 namespace FeTranslator\Translator;
 
 use Zend\I18n\Translator\TextDomain as ZendTextDomain;
+use Zend\I18n\Exception;
 
 /**
  * {@inheritdoc}}
