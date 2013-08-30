@@ -3,6 +3,7 @@ namespace FeTranslator\Translator;
 
 use FeTranslator\Exception;
 use FeTranslator\EventManager\EventManager;
+use FeTranslator\Translator\LoaderPluginManager;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Uri\Uri;
@@ -36,6 +37,21 @@ class Translator extends \Zend\I18n\Translator\Translator
      * @var EventManager
      */
     protected $eventManager;
+    
+    /**
+    * Constructor
+    */
+    public function __construct()
+    {
+        // Override the phparray service with our own service
+        $this->getPluginManager()->setAllowOverride(true);
+        $this->getPluginManager()->setInvokableClass(
+            'phparray', 
+            'FeTranslator\Translator\Loader\PhpArray',
+            true
+        );
+        $this->getPluginManager()->setAllowOverride(false);
+    }
 
 
     /**
@@ -58,7 +74,7 @@ class Translator extends \Zend\I18n\Translator\Translator
     {
         return $this->eventManager;
     }
-
+    
     /**
      * Get a translated message.
      *
