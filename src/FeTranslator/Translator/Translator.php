@@ -37,7 +37,7 @@ class Translator extends \Zend\I18n\Translator\Translator
      * @var EventManager
      */
     protected $eventManager;
-    
+
     /**
     * Constructor
     */
@@ -46,7 +46,7 @@ class Translator extends \Zend\I18n\Translator\Translator
         // Override the phparray service with our own service
         $this->getPluginManager()->setAllowOverride(true);
         $this->getPluginManager()->setInvokableClass(
-            'phparray', 
+            'phparray',
             'FeTranslator\Translator\Loader\PhpArray',
             true
         );
@@ -74,7 +74,7 @@ class Translator extends \Zend\I18n\Translator\Translator
     {
         return $this->eventManager;
     }
-    
+
     /**
      * Get a translated message.
      *
@@ -120,6 +120,33 @@ class Translator extends \Zend\I18n\Translator\Translator
         }
 
         return $lookup;
+    }
+
+    /**
+     * Load all translations for a given key 
+     *
+     * @param string $key
+     * @param string $locale
+     * @param string $namespace
+     *
+     * @return array|null when the key could not be found
+     */
+    public function getTranslations($key, $locale = null, $namespace = 'default')
+    {
+        $locale = ($locale ?: $this->getLocale());
+
+        if (!isset($this->messages[$namespace][$locale])) {
+            $this->loadMessages($namespace, $locale);
+        }
+
+        if (
+            isset($this->messages[$namespace][$locale][$key]) &&
+            is_array($this->messages[$namespace][$locale][$key])
+         ) {
+            return $this->messages[$namespace][$locale][$key];
+        }
+
+        return null;
     }
 
     /**
